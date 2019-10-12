@@ -199,7 +199,6 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			
 			var day = ''
 			var leibie = '品牌'
 			$('.button').click(function(index, item) {
@@ -208,6 +207,7 @@
 				leibie = $(".active").text()
 				load(day, leibie);
 			})
+
 			function load(day, leibie) {
 				var myChart = echarts.init(document.getElementById('main'));
 				myChart.showLoading();
@@ -215,6 +215,7 @@
 				loadOneLine2(myChart, a[0], a[1][0]);
 				myChart.hideLoading();
 			}
+
 			$(function() {
 				var myDate = new Date;
 				var year = myDate.getFullYear(); //获取当前年
@@ -225,7 +226,6 @@
 				load(day, leibie);
 				layDate(time)
 			})
-
 
 			//日期
 			function layDate(day) {
@@ -239,21 +239,21 @@
 						type: 'date',
 						value: day,
 						isInitValue: true,
-						done: function(value, date, endDate){
-							
-							load(value,$(".active").text())
+						done: function(value, date, endDate) {
+
+							load(value, $(".active").text())
 						}
 					});
 				})
 			}
 
 
-			// 加载统计图(传入容器，数据，x轴数据)
+			// 创建折线统计图(传入容器，数据，x轴数据)
 			function loadOneLine2(myChart, arr, names) {
 
-				colors = ['#4ba1de', '#8d3137', '#d9398c', '#a239d9', '#5039d9', '#39d7d9', '#39d9a2', '#3dd939', '#d0d764',
-					'#f0a709'
-				];
+				// colors = ['#4ba1de', '#8d3137', '#d9398c', '#a239d9', '#5039d9', '#39d7d9', '#39d9a2', '#3dd939', '#d0d764',
+				// 	'#f0a709'
+				// ];
 				// 显示标题，图例和空的坐标轴
 				myChart.setOption({
 					color: colors,
@@ -367,8 +367,6 @@
 										data: arr4
 									}
 								}
-
-
 							})
 							arr.push(json)
 						}
@@ -390,23 +388,28 @@
 			}
 			// 点击前一天的按钮
 			$('.prev').click(function() {
-				var time1 = new Date(day).getTime() - (60*60*24*1000)  
-				var timestamp = new Date(time1);
-				day = (timestamp.toLocaleDateString().replace(/\//g, "-"))
-				 //直接用 new Date(时间戳) 格式转化获得当前时间
-
-				// console.log(time2)
 				// day=>时间戳=>时间戳减一天=>day的形式
+				var time1 = new Date(day).getTime() - (60 * 60 * 24 * 1000)
+				//直接用 new Date(时间戳) 格式转化获得当前时间
+				var timestamp = new Date(time1);
+				var date = timestamp.toLocaleDateString().replace(/\//g, "-")
+				day = getNewDate(date)
 				load(day, leibie);
 				console.log(day)
 				layDate(day)
 			});
 
+			function getNewDate(str) {
+				/^([0-9]*)\-([0-9]*)\-([0-9]*)$/.exec(str);
+				return (RegExp.$1 + (RegExp.$2.length < 2 ? "-0" : "-") + RegExp.$2 + (RegExp.$3.length < 2 ? "-0" : "-") + RegExp.$3);
+			}
+
 			// 点击后一天的按钮
 			$('.after').click(function() {
-				var time2 = new Date(day).getTime() + (60*60*24*1000)  
+				var time2 = new Date(day).getTime() + (60 * 60 * 24 * 1000)
 				var timestamp = new Date(time2);
-				day = timestamp.toLocaleDateString().replace(/\//g, "-")
+				var date = timestamp.toLocaleDateString().replace(/\//g, "-")
+				day = getNewDate(date)
 				load(day, leibie);
 				layDate(day)
 			})
